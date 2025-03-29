@@ -24,16 +24,17 @@ python. .\benchmark_gui.py
 Preferably your paths should look like this
 
 ```
-📁 BenchmarkQAIHub/
+📂 BenchmarkQAIHub/
 ├─── 📁 datasets_onnx
 ├─── 📁 datasets_quantized_onnx
 ├─── 📁 datasets_quantized_tflite
 ├─── 📁 datasets_tflite
 ├─── 🐍 benchmark_gui.py
 ├─── 🐍 one_script_to_rule_them_all.py
-├─── 📄class_index.json
-├─── 📄ground_truth.json
-├─── 📄synset.json
-├─── 📄requirements.txt
+├─── 📃 class_index.json
+├─── 📃 ground_truth.json
+├─── 📃 synset.json
+├─── 📄 requirements.txt
+├─── 📄 model_accuracy_scores.txt
 └─── etc.
 ```
