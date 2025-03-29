@@ -44,12 +44,13 @@ class BenchmarkQAIHub():
 		self.button_icon = Image.open("running-icon.png")
 
 		self.run_benchmark_button = ctk.CTkButton(self.root, text="Run Benchmark", command=self.run_benchmark_threaded, image=ctk.CTkImage(dark_image=self.button_icon, light_image=self.button_icon))
-		self.run_benchmark_button.pack(pady=50)
+		self.run_benchmark_button.pack(pady=25)
 
 		self.root.mainloop()
 
 	def run_benchmark_threaded(self):
 		# Run the benchmark in a separate thread to prevent UI freezing.
+		messagebox.showerror(title="WARNING", message="Be careful not to click the button again.\nIt will start up another thread.👍\n- Adolfo")
 		threading.Thread(target=self.run_benchmark, daemon=True).start()
 
 	def run_benchmark(self):
