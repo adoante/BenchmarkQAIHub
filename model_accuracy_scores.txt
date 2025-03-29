@@ -1,3 +1,5 @@
+## Samsung Galaxy S24 (Family)
+
 # TFlite
 (77.12, 99.33, 3.40, 88, 79, "Samsung Galaxy S24", "wideresnet50", "tflite")
 (79.94, 94.78, 7.09, 282, 1579, "Samsung Galaxy S24", "vit", "tflite")
@@ -22,3 +24,6 @@
 (80.68, 95.37, 'Samsung Galaxy S24', 'swin_tiny', 'onnx')
 (82.6, 96.23, 'Samsung Galaxy S24', 'swin_small', 'onnx')
 (83.04, 96.45, 'Samsung Galaxy S24', 'swin_base', 'onnx')
+(56.22, 78.48, 'samsunggalaxys24(family)', 'shufflenet_v2', 'onnx')
+
+## Samsung Galaxy S23
