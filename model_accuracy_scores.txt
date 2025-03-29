@@ -22,3 +22,4 @@
 (80.68, 95.37, 'Samsung Galaxy S24', 'swin_tiny', 'onnx')
 (82.6, 96.23, 'Samsung Galaxy S24', 'swin_small', 'onnx')
 (83.04, 96.45, 'Samsung Galaxy S24', 'swin_base', 'onnx')
+(77.07, 93.24, 'samsunggalaxys23', 'wideresnet50_quantized', 'tflite')
