@@ -50,7 +50,7 @@ class BenchmarkQAIHub():
 
 	def run_benchmark_threaded(self):
 		# Run the benchmark in a separate thread to prevent UI freezing.
-		messagebox.showerror(title="WARNING", message="Be careful not to click the button again.\nIt will start up another thread.👍\n- Adolfo")
+		messagebox.showinfo(title="WARNING", message="Be careful not to click the button again.\nIt will start up another thread.👍\n- Adolfo")
 		threading.Thread(target=self.run_benchmark, daemon=True).start()
 
 	def run_benchmark(self):
@@ -114,7 +114,7 @@ class BenchmarkQAIHub():
 				results_json = "results.json"
 				ground_truth_json = "ground_truth.json"
 
-				calculate_accuracy(results_json, ground_truth_json, model_device, model_name, model_library)
+				calculate_accuracy(results_json, ground_truth_json, device_name, model_name, model_library)
 
 				# Show success message after completion
 				messagebox.showinfo(title="✅ Success!", message="Benchmark completed successfully!")
