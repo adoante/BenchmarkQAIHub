@@ -10,10 +10,12 @@ from os import listdir, path
 class BenchmarkQAIHub():
 	def __init__(self):
 		self.root = ctk.CTk()
-		self.root.geometry("400x400")
+		self.root.geometry("500x500")
 		self.root.title("Benchmark QAI Hub")
 		self.root.iconbitmap("favicon.ico")
 		
+		# Title
+
 		self.appraise_image = Image.open("Appraise.png")
 		self.title_image = ctk.CTkImage(light_image=self.appraise_image, dark_image=self.appraise_image, size=(308,85))
 		
@@ -23,28 +25,39 @@ class BenchmarkQAIHub():
 		self.window_sub_label = ctk.CTkLabel(self.root, text="Benchmarking Tool", font=("Arial", 18))
 		self.window_sub_label.pack(pady=(0, 20))
 
-		self.model_path_label = ctk.CTkLabel(self.root, text="Model File Path:", font=("Arial", 12))
+		# Create Tabs
+
+		self.tabs = ctk.CTkTabview(self.root, width=500, height=500)
+		self.tabs.pack()
+		self.batch_inference_tab = self.tabs.add("Batch Inference")
+		self.single_inference_tab = self.tabs.add("Single Inference")
+
+		# Batch Inference
+
+		self.model_path_label = ctk.CTkLabel(self.batch_inference_tab, text="Model File Path:", font=("Arial", 12))
 		self.model_path_label.pack()
 
-		self.model_path_entry = ctk.CTkEntry(self.root, placeholder_text="./model.library", font=("Arial", 16), width=300)
+		self.model_path_entry = ctk.CTkEntry(self.batch_inference_tab, placeholder_text="./model.library", font=("Arial", 16), width=300)
 		self.model_path_entry.pack()
 
-		self.device_name_label = ctk.CTkLabel(self.root, text="Device Name:", font=("Arial", 12))
+		self.device_name_label = ctk.CTkLabel(self.batch_inference_tab, text="Device Name:", font=("Arial", 12))
 		self.device_name_label.pack()
 
-		self.device_name_entry = ctk.CTkEntry(self.root, placeholder_text="Samsung Galaxy S24 (Family)", font=("Arial", 16), width=300)
+		self.device_name_entry = ctk.CTkEntry(self.batch_inference_tab, placeholder_text="Samsung Galaxy S24 (Family)", font=("Arial", 16), width=300)
 		self.device_name_entry.pack()
 
-		self.datasets_dir_label = ctk.CTkLabel(self.root, text="Datasets Directory Path:", font=("Arial", 12))
+		self.datasets_dir_label = ctk.CTkLabel(self.batch_inference_tab, text="Datasets Directory Path:", font=("Arial", 12))
 		self.datasets_dir_label.pack()
 
-		self.datasets_dir_entry = ctk.CTkEntry(self.root, placeholder_text="./datasets_quantized_library", font=("Arial", 16), width=300)
+		self.datasets_dir_entry = ctk.CTkEntry(self.batch_inference_tab, placeholder_text="./datasets_quantized_library", font=("Arial", 16), width=300)
 		self.datasets_dir_entry.pack()
 
 		self.button_icon = Image.open("running-icon.png")
 
-		self.run_benchmark_button = ctk.CTkButton(self.root, text="Run Benchmark", command=self.run_benchmark_threaded, image=ctk.CTkImage(dark_image=self.button_icon, light_image=self.button_icon))
+		self.run_benchmark_button = ctk.CTkButton(self.batch_inference_tab, text="Run Benchmark", command=self.run_benchmark_threaded, image=ctk.CTkImage(dark_image=self.button_icon, light_image=self.button_icon))
 		self.run_benchmark_button.pack(pady=25)
+
+		# Single Inference
 
 		self.root.mainloop()
 
