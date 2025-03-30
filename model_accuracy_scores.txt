@@ -28,3 +28,8 @@
 
 ## Samsung Galaxy S23
 (77.07, 93.24, 'samsunggalaxys23', 'wideresnet50_quantized', 'tflite')
+(72.36, 87.72, 'samsunggalaxys23', 'wideresnet50', 'tflite')
+(79.94, 94.77, 'samsunggalaxys23', 'vit', 'tflite')
+(79.18, 94.5, 'samsunggalaxys23', 'swin_tiny', 'tflite')
+(6.79, 8.3, 'samsunggalaxys23', 'swin_small', 'tflite') ---- Datset 5 is missing
+(81.91, 95.98, 'samsunggalaxys23', 'swin_base', 'tflite')
