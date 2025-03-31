@@ -370,7 +370,7 @@ class BenchmarkQAIHub():
 				self.run_inference_button.configure(state="disabled", fg_color="dark grey")  # Disable button
 				if self.model_path_entry.get():
 					# Upload Model
-					model_path = self.model_path_entry.get()
+					model_path = self.model_path_entry_2.get()
 					model = hub.upload_model(model_path)
 
 					# Model ID
