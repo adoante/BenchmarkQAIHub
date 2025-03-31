@@ -34,3 +34,8 @@
 (81.98, 95.89, 'Samsung Galaxy S23', 'swin_small', 'tflite')
 (81.91, 95.98, 'samsunggalaxys23', 'swin_base', 'tflite')
 (77.09, 93.25, 0, 'Samsung Galaxy S23', 'wideresnet50_quantized', 'onnx')
+(54.65, 77.99, 'Samsung Galaxy S23', 'squeezenet1_1_quantized', 'tflite')
+(54.82, 78.11, 'Samsung Galaxy S23', 'squeezenet1_1', 'tflite')
+(55.82, 78.06, 'Samsung Galaxy S23', 'shufflenet_v2_quantized', 'tflite')
+(56.2, 78.47, 'Samsung Galaxy S23', 'shufflenet_v2', 'tflite')
+(79.87, 94.78, 'Samsung Galaxy S23', 'resnext50_quantized', 'tflite')
