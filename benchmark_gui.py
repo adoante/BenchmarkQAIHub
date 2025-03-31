@@ -259,13 +259,18 @@ class BenchmarkQAIHub():
 				if self.model_path_entry.get():
 					# Upload Model
 					model_path = self.model_path_entry.get()
-					model = hub.upload_model(str(model_path))	
+					model = hub.upload_model(str(model_path))
+
+					# Model ID
+					model_id = model.model_id
 				else:
 					# Model ID
 					model_id = self.model_id_entry.get()
 					# Get Model
 					model = hub.get_model(model_id)
 				
+				print(f"Model ID: {model_id}")
+
 				# Model Name
 				model_name = path.splitext(model.name)[0]
 				print(f"Model Name: {model_name}")
@@ -328,7 +333,6 @@ class BenchmarkQAIHub():
 
 			except Exception as e:
 				messagebox.showerror(title="❌ Error!", message=f"An error occurred: {e}")
-				messagebox.showinfo(title="❌ Error!", message="Bro. Btw. Check the textbox inputs if that other error message made zero sense. 👍")
 			finally:
 				self.run_benchmark_button.configure(state="normal", fg_color=self.button_color)  # Re-enable button
 		else:
@@ -367,7 +371,10 @@ class BenchmarkQAIHub():
 				if self.model_path_entry.get():
 					# Upload Model
 					model_path = self.model_path_entry.get()
-					model = hub.upload_model(model_path)	
+					model = hub.upload_model(model_path)
+
+					# Model ID
+					model_id = model.model_id
 				else:
 					# Model ID
 					model_id = self.model_id_entry_2.get()
@@ -412,7 +419,6 @@ class BenchmarkQAIHub():
 
 			except Exception as e:
 				messagebox.showerror(title="❌ Error!", message=f"An error occurred: {e}")
-				messagebox.showerror(title="❌ Error!", message="Bro. Btw. Check the textbox inputs if that other error message made zero sense. 👍")
 			finally:
 				self.run_inference_button.configure(state="normal", fg_color=self.button_color)  # Re-enable button
 		else:
