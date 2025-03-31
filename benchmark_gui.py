@@ -249,12 +249,12 @@ class BenchmarkQAIHub():
 
 	def run_batch_benchmark_threaded(self):
 		# Run the benchmark in a separate thread to prevent UI freezing.
-		self.run_benchmark_button.configure(state="disable")
 		threading.Thread(target=self.run_batch_benchmark, daemon=True).start()
 
 	def run_batch_benchmark(self):
 		if self.get_dataset_dir() and self.get_model_id_path() and self.get_device_name():
 			try:
+				self.run_benchmark_button.configure(state="disabled")  # Disable button
 				if self.model_path_entry.get():
 					# Upload Model
 					model_path = self.model_path_entry.get()
@@ -296,13 +296,13 @@ class BenchmarkQAIHub():
 				list2 = dataset_paths[1::2]  # even
 
 				thread1 = threading.Thread(
-				    target=inference_dataset,
-				    args=(list1, model_id, device_name, model_name, results_dir)
+					target=inference_dataset,
+					args=(list1, model_id, device_name, model_name, results_dir)
 				)
 
 				thread2 = threading.Thread(
-				    target=inference_dataset,
-				    args=(list2, model_id, device_name, model_name, results_dir)
+					target=inference_dataset,
+					args=(list2, model_id, device_name, model_name, results_dir)
 				)
 
 				thread1.start()
@@ -328,6 +328,8 @@ class BenchmarkQAIHub():
 			except Exception as e:
 				messagebox.showerror(title="❌ Error!", message=f"An error occurred: {e}")
 				messagebox.showinfo(title="❌ Error!", message="Bro. Btw. Check the textbox inputs if that other error message made zero sense. 👍")
+			finally:
+				self.run_benchmark_button.configure(state="normal")  # Re-enable button
 		else:
 			print("😱 This should never happen. 😱")
 
@@ -355,12 +357,13 @@ class BenchmarkQAIHub():
 
 	def run_dataset_inference_threaded(self):
 		# Run the benchmark in a separate thread to prevent UI freezing.
-		self.run_inference_button.configure(state="disable")
+		self.run_inference_button.configure(state="disabled")
 		threading.Thread(target=self.run_dataset_inference, daemon=True).start()
 
 	def run_dataset_inference(self):
 		if self.get_dataset_path() and self.get_model_id_path_2() and self.get_device_name_2():
 			try:
+				self.run_inference_button.configure(state="disabled")  # Disable button
 				if self.model_path_entry.get():
 					# Upload Model
 					model_path = self.model_path_entry.get()
@@ -410,6 +413,8 @@ class BenchmarkQAIHub():
 			except Exception as e:
 				messagebox.showerror(title="❌ Error!", message=f"An error occurred: {e}")
 				messagebox.showerror(title="❌ Error!", message="Bro. Btw. Check the textbox inputs if that other error message made zero sense. 👍")
+			finally:
+				self.run_inference_button.configure(state="normal")  # Re-enable button
 		else:
 			print("Check message box. 👍")
 
