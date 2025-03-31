@@ -189,7 +189,7 @@ class BenchmarkQAIHub():
 		# Run Benchmark 2
 		self.button_icon = Image.open("running-icon.png")
 
-		self.run_benchmark_button_2 = ctk.CTkButton(
+		self.run_inference_button = ctk.CTkButton(
 			self.single_inference_tab,
 			text="Run Inference",
 			command=self.run_dataset_inference_threaded,
@@ -198,7 +198,7 @@ class BenchmarkQAIHub():
 				light_image=self.button_icon
 			)
 		)
-		self.run_benchmark_button_2.pack(pady=25)
+		self.run_inference_button.pack(pady=25)
 
 		self.root.mainloop()
 
@@ -249,7 +249,7 @@ class BenchmarkQAIHub():
 
 	def run_batch_benchmark_threaded(self):
 		# Run the benchmark in a separate thread to prevent UI freezing.
-		messagebox.showinfo(title="WARNING", message="Be careful not to click the button again.\nIt will start up another thread.👍\n- Adolfo")
+		self.run_benchmark_button.configure(state="disable")
 		threading.Thread(target=self.run_batch_benchmark, daemon=True).start()
 
 	def run_batch_benchmark(self):
@@ -355,7 +355,7 @@ class BenchmarkQAIHub():
 
 	def run_dataset_inference_threaded(self):
 		# Run the benchmark in a separate thread to prevent UI freezing.
-		messagebox.showinfo(title="WARNING", message="Be careful not to click the button again.\nIt will start up another thread.👍\n- Adolfo")
+		self.run_inference_button.configure(state="disable")
 		threading.Thread(target=self.run_dataset_inference, daemon=True).start()
 
 	def run_dataset_inference(self):
