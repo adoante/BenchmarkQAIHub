@@ -368,7 +368,7 @@ class BenchmarkQAIHub():
 		if self.get_dataset_path() and self.get_model_id_path_2() and self.get_device_name_2():
 			try:
 				self.run_inference_button.configure(state="disabled", fg_color="dark grey")  # Disable button
-				if self.model_path_entry.get():
+				if self.model_path_entry_2.get():
 					# Upload Model
 					model_path = self.model_path_entry_2.get()
 					model = hub.upload_model(model_path)
