@@ -27,6 +27,8 @@
 (79.92, 94.76, 1.520, 72, 147, 'Samsung Galaxy S24', 'resnext50_quantized', 'onnx')
 
 ## Samsung Galaxy S23
+
+# TFlite
 (77.07, 93.24, 'Samsung Galaxy S23', 1.76, 340, 82, 'wideresnet50_quantized', 'tflite')
 (72.36, 87.72, 'Samsung Galaxy S23', 4.91, 1000, 79, 'wideresnet50', 'tflite')
 (79.94, 94.77, 'Samsung Galaxy S23', 13.2, 11, 1579, 'vit', 'tflite')
@@ -39,6 +41,7 @@
 (56.2, 78.47, 'Samsung Galaxy S23', 0.695, 27, 159, 'shufflenet_v2', 'tflite')
 (79.87, 94.78, 'Samsung Galaxy S23', 0.910, 66, 82, 'resnext50_quantized', 'tflite')
 
+# ONNX
 (77.09, 93.25, 0, 'Samsung Galaxy S23', 18.6, 212, 151, 'wideresnet50_quantized', 'onnx')
 (77.12, 93.34, 'Samsung Galaxy S23', 5.43, 297, 128, 'wideresnet50', 'onnx')
 (3.39, 4.37, 'Samsung Galaxy S23', 14.3, 348, 976, 'vit', 'onnx')
