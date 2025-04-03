@@ -269,31 +269,33 @@ class BenchmarkQAIHub():
 					# Get Model
 					model = hub.get_model(model_id)
 				
-				print(f"Model ID: {model_id}")
-
 				# Model Name
 				model_name = path.splitext(model.name)[0]
-				print(f"Model Name: {model_name}")
-
+				
 				# Library Name
 				model_library = model.model_type.name.lower()
-				print(f"Model Library: {model_library}")
-
+				
 				# Get Device Name
 				device_name = self.device_name_entry.get()
-				print(f"Device Name: f{device_name}")
-
+				
 				# Set benchmark results directory
 				model_device = device_name.replace(" ", "").lower()
 				results_dir = f"{model_name}_{model_library}_{model_device}"
-				print(f"Results Directory: {results_dir}")
-
+				
+				print(f"------------------------------------------------------")
+				print(f"| Model ID: {model_id}")
+				print(f"| Model Name: {model_name}")
+				print(f"| Model Library: {model_library}")
+				print(f"| Device Name: {device_name}")
+				print(f"| Results Directory: {results_dir}")
+				print(f"------------------------------------------------------")
+				
 				### Run inference on image datasets
 				# Dataset Paths
 				datasets_dir = self.datasets_dir_entry.get()
 				dataset_paths = [
-					f"./{datasets_dir}/" + image_dataset 
-					for image_dataset in listdir(f"./{datasets_dir}")
+					f"{datasets_dir}/" + image_dataset 
+					for image_dataset in listdir(f"{datasets_dir}")
 				]
 				dataset_paths.sort(key=extract_number)
 

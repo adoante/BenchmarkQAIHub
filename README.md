@@ -38,3 +38,9 @@ Preferably your paths should look like this
 ├─── 📄 model_accuracy_scores.txt
 └─── etc.
 ```
+
+## To Do
+- [ ] Keep an individual log of inference fails
+- [ ] Add button to recalculate accuracy given results directory
+- [X] Change `Datasets Directory Path` entry to accept full paths
+- [ ] 
