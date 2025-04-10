@@ -4,7 +4,7 @@ import threading
 
 from PIL import Image
 from tkinter import messagebox
-from one_script_to_rule_them_all import inference_dataset, process_results, calculate_accuracy, InputSpec, extract_number, FileType
+from one_script_to_rule_them_all import inference_dataset, process_results, calculate_accuracy, InputSpec, extract_number, FileType, inference_datasets_using_id
 from os import listdir, path
 
 class BenchmarkQAIHub():
@@ -41,6 +41,7 @@ class BenchmarkQAIHub():
 		self.tabs.pack()
 		self.batch_inference_tab = self.tabs.add("Batch Datasets")
 		self.single_inference_tab = self.tabs.add("Single Dataset")
+		self.batch_inference_no_upload = self.tabs.add("Batch No Dataset Upload")
 
 		### Batch Dataset Inference
 
@@ -201,6 +202,73 @@ class BenchmarkQAIHub():
 		self.button_color = self.run_inference_button._fg_color
 		self.run_inference_button.pack(pady=25)
 
+		### Batch No Dataset Upload
+		# Model ID
+		self.model_id_3_var = ctk.StringVar()
+		self.model_id_3_var.trace_add("write", self.check_entry)
+
+		self.model_id_label_3 = ctk.CTkLabel(
+			self.batch_inference_no_upload,
+			text="Model ID:",
+			font=("Arial", 12)
+		)
+		self.model_id_label_3.pack()
+
+		self.model_id_entry_3 = ctk.CTkEntry(
+			self.batch_inference_no_upload,
+			font=("Arial", 16),
+			width=300,
+			textvariable=self.model_id_3_var
+		)
+		self.model_id_entry_3.pack()
+
+		# Model Path
+		self.model_path_3_var = ctk.StringVar()
+		self.model_path_3_var.trace_add("write", self.check_entry)
+
+		self.model_path_label_3 = ctk.CTkLabel(
+			self.batch_inference_no_upload,
+			text="Model File Path:",
+			font=("Arial", 12)
+		)
+		self.model_path_label_3.pack()
+
+		self.model_path_entry_3 = ctk.CTkEntry(
+			self.batch_inference_no_upload,
+			font=("Arial", 16),
+			width=300,
+			textvariable=self.model_path_3_var
+		)
+		self.model_path_entry_3.pack()
+
+		# Device Name
+		self.device_name_label_3 = ctk.CTkLabel(
+			self.batch_inference_no_upload,
+			text="Device Name:", 
+			font=("Arial", 12))
+		self.device_name_label_3.pack()
+
+		self.device_name_entry_3 = ctk.CTkEntry(
+			self.batch_inference_no_upload,
+			font=("Arial", 16),
+			width=300)
+		self.device_name_entry_3.pack()
+
+		# Run Benchmark 3
+		self.button_icon = Image.open("running-icon.png")
+
+		self.run_batch_no_dataset_upload_button = ctk.CTkButton(
+			self.batch_inference_no_upload,
+			text="Run Benchmark",
+			command=lambda:print("hello"),
+			image=ctk.CTkImage(
+				dark_image=self.button_icon,
+				light_image=self.button_icon
+			)
+		)
+
+		self.run_batch_no_dataset_upload_button.pack(pady=25)
+
 		self.root.mainloop()
 
 	def check_entry(self, *args):
@@ -244,6 +312,17 @@ class BenchmarkQAIHub():
 			)
 		else:
 			self.model_id_entry_2.configure(
+				state="normal",
+				fg_color=self.entry_original_color
+			)
+
+		if self.model_path_3_var.get():
+			self.model_id_entry_3.configure(
+				state="disabled",
+				fg_color="dark grey"
+			)
+		else:
+			self.model_id_entry_3.configure(
 				state="normal",
 				fg_color=self.entry_original_color
 			)
@@ -450,5 +529,93 @@ class BenchmarkQAIHub():
 			messagebox.showerror(title="❌ Error!", message="No datasets directory path given.")
 			return False
 		return True
+
+	def run_batch_no_dataset_upload_benchamrk(self):
+		if self.get_dataset_dir() and self.get_model_id_path() and self.get_device_name():
+			try:
+				self.run_benchmark_button.configure(state="disabled", fg_color="dark grey")  # Disable button
+				if self.model_path_entry.get():
+					# Upload Model
+					model_path = self.model_path_entry.get()
+					model = hub.upload_model(str(model_path))
+
+					# Model ID
+					model_id = model.model_id
+				else:
+					# Model ID
+					model_id = self.model_id_entry.get()
+					# Get Model
+					model = hub.get_model(model_id)
+				
+				# Model Name
+				model_name = path.splitext(model.name)[0]
+				
+				# Library Name
+				model_library = model.model_type.name.lower()
+				
+				# Get Device Name
+				device_name = self.device_name_entry.get()
+				
+				# Set benchmark results directory
+				model_device = device_name.replace(" ", "").lower()
+				results_dir = f"{model_name}_{model_library}_{model_device}"
+				
+				print(f"------------------------------------------------------")
+				print(f"| Model ID: {model_id}")
+				print(f"| Model Name: {model_name}")
+				print(f"| Model Library: {model_library}")
+				print(f"| Device Name: {device_name}")
+				print(f"| Results Directory: {results_dir}")
+				print(f"------------------------------------------------------")
+				
+				### Run inference on image datasets
+				# Dataset Paths
+				datasets_dir = self.datasets_dir_entry.get()
+				dataset_paths = [
+					f"{datasets_dir}/" + image_dataset 
+					for image_dataset in listdir(f"{datasets_dir}")
+				]
+				dataset_paths.sort(key=extract_number)
+
+				# Split into two lists with alternating elements
+				list1 = dataset_paths[::2]  # odd
+				list2 = dataset_paths[1::2]  # even
+
+				thread1 = threading.Thread(
+					target=inference_dataset,
+					args=(list1, model_id, device_name, model_name, results_dir)
+				)
+
+				thread2 = threading.Thread(
+					target=inference_dataset,
+					args=(list2, model_id, device_name, model_name, results_dir)
+				)
+
+				thread1.start()
+				thread2.start()
+
+				thread1.join()
+				thread2.join()
+
+				### Process results from inference
+				result_paths = [f"./{results_dir}/" + result for result in listdir(f"./{results_dir}")]
+				result_paths.sort(key=extract_number)
+				process_results(result_paths, "./class_index.json", "./synset.json")
+
+				### Calculate accuracy based on processed results
+				results_json = "results.json"
+				ground_truth_json = "ground_truth.json"
+
+				calculate_accuracy(results_json, ground_truth_json, device_name, model_name, model_library)
+
+				# Show success message after completion
+				messagebox.showinfo(title="✅ Success!", message="Benchmark completed successfully!")
+
+			except Exception as e:
+				messagebox.showerror(title="❌ Error!", message=f"An error occurred: {e}")
+			finally:
+				self.run_benchmark_button.configure(state="normal", fg_color=self.button_color)  # Re-enable button
+		else:
+			print("😱 This should never happen. 😱")
 
 BenchmarkQAIHub()

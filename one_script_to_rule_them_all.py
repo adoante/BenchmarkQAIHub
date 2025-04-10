@@ -7,6 +7,7 @@ import json
 
 from PIL import Image
 from enum import Enum
+from os import listdir
 
 # Defines the only two input spec
 class InputSpec(Enum):
@@ -66,6 +67,14 @@ def construct_datasets(image_paths, datasets_dir, dataset_num, input_spec, file_
 	
 	dataset.download(download_path)
 
+# Upload datasets and get back list of dataset ids
+def upload_datasets(dataset_paths):
+	for dataset in dataset_paths:
+		hub.upload_dataset(dataset)
+
+	dataset_ids = hub.get_datasets(limit = 50)
+	return dataset_ids
+
 # Run inference on  QAI Hub and download
 def inference_dataset(dataset_paths, model_id, device_name, model_name, results_dir):
 	for dataset in dataset_paths:
@@ -97,6 +106,72 @@ def inference_dataset(dataset_paths, model_id, device_name, model_name, results_
 		# Download inference results dataset to specific folder
 		download_path = f"./{results_dir}/{model_name}_{dataset_id}"
 		inference_job.download_output_data(download_path)
+
+def inference_datasets_using_id(model_id, device_name, model_name, results_dir, input_spec, file_type):
+	tflite_normal = [
+		'dv74k8ew2', 'dv910vo82', 'dq9krm657', 'd82ndxp57', 'dv9518om2',
+		'dd9ppq5n9', 'dz7z43qr9', 'd67jwmon2', 'd67oxpon7', 'dp7lgeow2',
+		'dk7gkz4o2', 'dv74k8qw2', 'dq9krmo57', 'dp70nz3l9', 'd82ndxo57',
+		'd09y13p39', 'dv95185m2', 'dd9ppqon9', 'dn7xzrx59', 'dj7d0em89',
+		'dz7z43vr9', 'dx9e8e0p9', 'd67jwm4n2', 'dw9v84vj7', 'd693mv6l7',
+		'dp7lge3w2', 'dk7gkzmo2', 'dz2r543o7', 'dr9wme332', 'dv74k83w2',
+		'dq9krm357', 'd678rge62', 'd09y13v39', 'dv95186m2', 'dr2qq53l2',
+		'dj7d0en89', 'dr2qq51o2', 'dn7xzrnv9', 'dz7z43869', 'dx9e8e149',
+		'dw9v84507', 'd67oxpmq7', 'd693mvwp7', 'dw264zde9', 'dk7gkzx02',
+		'dr9wmeyk2', 'dv910vwe2', 'd678rgpy2', 'd09y130m9', 'dd9ppqew9',
+		'dv74k8ew2', 'dv910vo82', 'dq9krm657', 'd82ndxp57', 'dv9518om2',
+		'dd9ppq5n9', 'dz7z43qr9', 'd67jwmon2', 'd67oxpon7', 'dp7lgeow2',
+		'dk7gkz4o2', 'dv74k8qw2', 'dq9krmo57', 'dp70nz3l9', 'd82ndxo57',
+		'd09y13p39', 'dv95185m2', 'dd9ppqon9', 'dn7xzrx59', 'dj7d0em89',
+		'dz7z43vr9', 'dx9e8e0p9', 'd67jwm4n2', 'dw9v84vj7', 'd693mv6l7',
+		'dp7lge3w2', 'dk7gkzmo2', 'dz2r543o7', 'dr9wme332', 'dv74k83w2',
+		'dq9krm357', 'd678rge62', 'd09y13v39', 'dv95186m2', 'dr2qq53l2',
+		'dj7d0en89', 'dr2qq51o2', 'dn7xzrnv9', 'dz7z43869', 'dx9e8e149',
+		'dw9v84507', 'd67oxpmq7', 'd693mvwp7', 'dw264zde9', 'dk7gkzx02',
+		'dr9wmeyk2', 'dv910vwe2', 'd678rgpy2', 'd09y130m9', 'dd9ppqew9'
+	]
+
+	tflite_quantized = [
+
+	]
+
+	onnx_normal = [
+
+	]
+
+	onnx_quantized = [
+
+	]
+
+	if input_spec is InputSpec.NORMAL and FileType.TFLITE:
+		datasets = tflite_normal
+	if input_spec is InputSpec.NORMAL and FileType.ONNX:
+		datasets = onnx_normal
+	if input_spec is InputSpec.QUANTIZED and FileType.TFLITE:
+		datasets = tflite_quantized
+	if input_spec is InputSpec.QUANTIZED and FileType.ONNX:
+		datasets = onnx_quantized
+
+	for dataset in datasets:
+		# Submit inference job
+		print(f"😩 Inference: {dataset} 😩")
+		inference_job = hub.submit_inference_job(
+			model = hub.get_model(model_id),
+			device = hub.Device(device_name),
+			inputs = hub.get_dataset(dataset),
+		)
+
+		# Ensure the job is valid
+		assert isinstance(inference_job, hub.InferenceJob)
+
+		# Ensure folder exists
+		results_dir = pathlib.Path(results_dir)
+		results_dir.mkdir(parents=True, exist_ok=True)
+
+		# Download inference results dataset to specific folder
+		download_path = f"./{results_dir}/{model_name}_{dataset.index + 1}"
+		inference_job.download_output_data(download_path)
+
 
 # Results are stored as logits in h5 file and save as json
 def process_results(result_paths, class_index_path, synset_path):
@@ -198,3 +273,14 @@ def extract_number(filename):
 		num_part = ''.join(filter(str.isdigit, parts[-1]))  # Extract digits
 		return int(num_part) if num_part.isdigit() else float('inf')  # Convert to integer
 	return float('inf')  # Default if no number found
+
+# Dataset Paths
+# datasets_dir = "datasets_tflite"
+# dataset_paths = [
+# 	f"{datasets_dir}/" + image_dataset 
+# 	for image_dataset in listdir(f"{datasets_dir}")
+# ]
+# dataset_paths.sort(key=extract_number)
+
+# dataset_ids = upload_datasets(dataset_paths)
+# print(dataset_ids)
