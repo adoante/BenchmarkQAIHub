@@ -232,14 +232,14 @@ def extract_number(filename):
 		return int(num_part) if num_part.isdigit() else float('inf')  # Convert to integer
 	return float('inf')  # Default if no number found
 
-# Dataset Paths
-datasets_dir = "datasets_onnx"
-dataset_paths = [
-	f"{datasets_dir}/" + image_dataset 
-	for image_dataset in listdir(f"{datasets_dir}")
-]
-dataset_paths.sort(key=extract_number)
+# # Dataset Paths
+# datasets_dir = "datasets_quantized_onnx"
+# dataset_paths = [
+# 	f"{datasets_dir}/" + image_dataset 
+# 	for image_dataset in listdir(f"{datasets_dir}")
+# ]
+# dataset_paths.sort(key=extract_number)
 
-dataset_ids = upload_datasets(dataset_paths)
+# dataset_ids = upload_datasets(dataset_paths)
 
-print([dataset.dataset_id for dataset in dataset_ids])
+# print([dataset.dataset_id for dataset in dataset_ids])

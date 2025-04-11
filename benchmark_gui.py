@@ -688,34 +688,36 @@ class BenchmarkQAIHub():
 					'dj7d0en89', 'dr2qq51o2', 'dn7xzrnv9', 'dz7z43869', 'dx9e8e149',
 					'dw9v84507', 'd67oxpmq7', 'd693mvwp7', 'dw264zde9', 'dk7gkzx02',
 					'dr9wmeyk2', 'dv910vwe2', 'd678rgpy2', 'd09y130m9', 'dd9ppqew9',
-					'dv74k8ew2', 'dv910vo82', 'dq9krm657', 'd82ndxp57', 'dv9518om2',
-					'dd9ppq5n9', 'dz7z43qr9', 'd67jwmon2', 'd67oxpon7', 'dp7lgeow2',
-					'dk7gkz4o2', 'dv74k8qw2', 'dq9krmo57', 'dp70nz3l9', 'd82ndxo57',
-					'd09y13p39', 'dv95185m2', 'dd9ppqon9', 'dn7xzrx59', 'dj7d0em89',
-					'dz7z43vr9', 'dx9e8e0p9', 'd67jwm4n2', 'dw9v84vj7', 'd693mv6l7',
-					'dp7lge3w2', 'dk7gkzmo2', 'dz2r543o7', 'dr9wme332', 'dv74k83w2',
-					'dq9krm357', 'd678rge62', 'd09y13v39', 'dv95186m2', 'dr2qq53l2',
-					'dj7d0en89', 'dr2qq51o2', 'dn7xzrnv9', 'dz7z43869', 'dx9e8e149',
-					'dw9v84507', 'd67oxpmq7', 'd693mvwp7', 'dw264zde9', 'dk7gkzx02',
-					'dr9wmeyk2', 'dv910vwe2', 'd678rgpy2', 'd09y130m9', 'dd9ppqew9'
 				]
-				tflite_normal = tflite_normal[::-1]
 
 				tflite_quantized = []
-				onnx_normal = []
+
+				onnx_normal = [
+					'dj7d0qwq9', 'dz7z4jny9', 'dx9e85mv9', 'dw9v8m6z7', 'd67oxrvl7',
+					'd693mj007', 'dw264vqg9', 'dp7lgrv12', 'dk7gkn1e2', 'dz2r5veg7',
+					'dr9wm6wo2', 'dv74krjz2', 'dv9103yx2', 'dq9krg1d7', 'dp70nmko9',
+					'd09y1jmv9', 'dd9pprgm9', 'dj7d0q4q9', 'dz7z4j0y9', 'dw9v8mpz7',
+					'd67oxrzl7', 'dz2r5v8g7', 'dv74kr0z2', 'do7ml6zl9', 'd82ndr4o7',
+					'dr2qqmgv2', 'dn7xzly69', 'dz7z4joy9', 'd693mjn07', 'dw264vkg9',
+					'dz2r56jg7', 'dr9wmp8o2', 'do7mle1l9', 'd678r4vm2', 'd82nd6wo7',
+					'dd9ppz6m9', 'dn7xzqk69', 'dj7d03lp9', 'dz7z4yrw9', 'dw9v8xnq7',
+					'dw264wj69', 'dz2r56g07', 'dv74kloy2', 'do7mlek39', 'dp70nlg09',
+					'dv951jvz2', 'dr2qq6r62', 'dd9ppzwd9', 'dn7xzqjr9', 'dj7d03xp9'
+				]
+
 				onnx_quantized = []
 
 				file_type = self.optionmenu.get()
 				input_spec = self.optionmenu_2.get()
 
 				if file_type == "tflite" and input_spec == "normal":
-					dataset_ids = tflite_normal
+					dataset_ids = tflite_normal[::-1]
 				elif file_type == "tflite" and input_spec == "quantized":
-					dataset_ids = tflite_quantized
+					dataset_ids = tflite_quantized[::-1]
 				elif file_type == "onnx" and input_spec == "normal":
-					dataset_ids = onnx_normal
+					dataset_ids = onnx_normal[::-1]
 				elif file_type == "onnx" and input_spec == "quantized":
-					dataset_ids = onnx_quantized
+					dataset_ids = onnx_quantized[::-1]
 
 				# Split into two lists with alternating elements
 				list1 = dataset_ids[::2]  # odd
