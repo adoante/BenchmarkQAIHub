@@ -705,7 +705,18 @@ class BenchmarkQAIHub():
 					'dv951jvz2', 'dr2qq6r62', 'dd9ppzwd9', 'dn7xzqjr9', 'dj7d03xp9'
 				]
 
-				onnx_quantized = []
+				onnx_quantized = [
+					'dj7d0q5j9', 'dn7xzlpz9', 'dx9e85yk9', 'dk7gkn0g2', 'dr9wm6xe2',
+					'dv91038g2', 'dq9krgwv7', 'do7ml6wv9', 'd82ndr017', 'dn7xzl0z9',
+					'dj7d0qgy9', 'dz7z4jmz9', 'd67jwrq42', 'd67oxr8w7', 'd693mj887',
+					'dw264v359', 'dk7gkndg2', 'd82ndrn17', 'd09y1joe9', 'dv951zqw2',
+					'dr2qqmk82', 'dd9ppr8y9', 'dx9e85lk9', 'd67oxr0w7', 'dk7gknlg2',
+					'dr9wm6ke2', 'do7ml6yv9', 'd82ndrr17', 'd09y1jje9', 'dv951zzw2',
+					'dd9pprry9', 'dw9v8mm57', 'd693mjj87', 'dk7gknng2', 'dv74krrv2',
+					'dv91033g2', 'dq9krggv7', 'do7ml66v9', 'dp70nml59', 'dr2qqm682',
+					'dj7d0q3y9', 'dr2qqm6y2', 'dd9pprzo9', 'dz7z4jy59', 'dx9e85zo9',
+					'd67oxr667', 'dp7lgrk42', 'dk7gkngy2', 'dv9103qn2', 'do7ml6qm9'
+				]
 
 				file_type = self.optionmenu.get()
 				input_spec = self.optionmenu_2.get()
