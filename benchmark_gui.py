@@ -1,6 +1,8 @@
 import customtkinter as ctk
 import qai_hub as hub
 import threading
+import pathlib
+import time
 
 from PIL import Image
 from tkinter import messagebox
@@ -10,7 +12,7 @@ from os import listdir, path
 class BenchmarkQAIHub():
 	def __init__(self):
 		self.root = ctk.CTk()
-		self.root.geometry("500x500")
+		self.root.geometry("500x600")
 		self.root.title("Benchmark QAI Hub")
 		self.root.iconbitmap("favicon.ico")
 		
@@ -123,6 +125,22 @@ class BenchmarkQAIHub():
 		)
 		self.run_benchmark_button.pack(pady=25)
 
+		# Progress bar 1
+		self.progressbar = ctk.CTkProgressBar(
+			self.batch_inference_tab,
+			orientation="horizontal",
+			determinate_speed=2,
+			width=300,
+		)
+		self.progressbar.set(0)
+		self.progressbar.pack(pady=10)
+
+		self.progressbar_label = ctk.CTkLabel(
+			self.batch_inference_tab,
+			text="0 / 50",
+			font=("Arial", 12))
+		self.progressbar_label.pack()
+
 		### Single Dataset Inference
 
 		# Model ID 2
@@ -203,6 +221,7 @@ class BenchmarkQAIHub():
 		self.run_inference_button.pack(pady=25)
 
 		### Batch No Dataset Upload
+
 		# Model ID
 		self.model_id_3_var = ctk.StringVar()
 		self.model_id_3_var.trace_add("write", self.check_entry)
@@ -254,22 +273,81 @@ class BenchmarkQAIHub():
 			width=300)
 		self.device_name_entry_3.pack()
 
+		# File Type
+		self.optionmenu_label = ctk.CTkLabel(
+			self.batch_inference_no_upload,
+			text="File Type:", 
+			font=("Arial", 12))
+		self.optionmenu_label.pack()
+
+		self.optionmenu_var = ctk.StringVar()
+		self.optionmenu = ctk.CTkOptionMenu(
+			self.batch_inference_no_upload,
+			values=["tflite", "onnx"],
+			variable=self.optionmenu_var
+		)
+		self.optionmenu.pack()
+
+		# Input Spec
+		self.optionmenu_label_2 = ctk.CTkLabel(
+			self.batch_inference_no_upload,
+			text="Input Spec:", 
+			font=("Arial", 12))
+		self.optionmenu_label_2.pack()
+
+		self.optionmenu_2_var = ctk.StringVar()
+		self.optionmenu_2 = ctk.CTkOptionMenu(
+			self.batch_inference_no_upload,
+			values=["normal", "quantized"],
+			variable=self.optionmenu_2_var
+		)
+		self.optionmenu_2.pack()
+
 		# Run Benchmark 3
 		self.button_icon = Image.open("running-icon.png")
 
 		self.run_batch_no_dataset_upload_button = ctk.CTkButton(
 			self.batch_inference_no_upload,
 			text="Run Benchmark",
-			command=lambda:print("hello"),
+			command=self.run_batch_no_dataset_upload_benchmark_threaded,
 			image=ctk.CTkImage(
 				dark_image=self.button_icon,
 				light_image=self.button_icon
 			)
 		)
 
-		self.run_batch_no_dataset_upload_button.pack(pady=25)
+		self.run_batch_no_dataset_upload_button.pack(pady=15)
+
+		# Progress bar 3
+		self.progressbar_3 = ctk.CTkProgressBar(
+			self.batch_inference_no_upload,
+			orientation="horizontal",
+			determinate_speed=2,
+			width=300,
+		)
+		self.progressbar_3.set(0)
+		self.progressbar_3.pack(pady=10)
+
+		self.progressbar_label_3 = ctk.CTkLabel(
+			self.batch_inference_no_upload,
+			text="0 / 50",
+			font=("Arial", 12))
+		self.progressbar_label_3.pack()
 
 		self.root.mainloop()
+
+	def update_progressbar(self, progressbar, label, results_dir, total=50):
+		while True:
+			current_files = listdir(results_dir)
+			progress = min(len(current_files) / total, 1.0)
+
+			self.root.after(0, progressbar.set, progress)
+			self.root.after(0, lambda: label.configure(text=f"{len(current_files)} / {total}"))
+
+			if progress >= 1.0:
+				break
+
+			time.sleep(0.5)
 
 	def check_entry(self, *args):
 		if self.model_id_var.get():
@@ -312,6 +390,17 @@ class BenchmarkQAIHub():
 			)
 		else:
 			self.model_id_entry_2.configure(
+				state="normal",
+				fg_color=self.entry_original_color
+			)
+
+		if self.model_id_3_var.get():
+			self.model_path_entry_3.configure(
+				state="disabled",
+				fg_color="dark grey"
+			)
+		else:
+			self.model_path_entry_3.configure(
 				state="normal",
 				fg_color=self.entry_original_color
 			)
@@ -360,6 +449,10 @@ class BenchmarkQAIHub():
 				# Set benchmark results directory
 				model_device = device_name.replace(" ", "").lower()
 				results_dir = f"{model_name}_{model_library}_{model_device}"
+
+				# Ensure folder exists
+				results_dir = pathlib.Path(results_dir)
+				results_dir.mkdir(parents=True, exist_ok=True)
 				
 				print(f"------------------------------------------------------")
 				print(f"| Model ID: {model_id}")
@@ -392,11 +485,18 @@ class BenchmarkQAIHub():
 					args=(list2, model_id, device_name, model_name, results_dir)
 				)
 
+				thread3 = threading.Thread(
+    				target=self.update_progressbar,
+    				args=(self.progressbar, self.progressbar_label, results_dir)
+				)
+
 				thread1.start()
 				thread2.start()
+				thread3.start()
 
 				thread1.join()
 				thread2.join()
+				thread3.join()
 
 				### Process results from inference
 				result_paths = [f"./{results_dir}/" + result for result in listdir(f"./{results_dir}")]
@@ -530,20 +630,24 @@ class BenchmarkQAIHub():
 			return False
 		return True
 
-	def run_batch_no_dataset_upload_benchamrk(self):
-		if self.get_dataset_dir() and self.get_model_id_path() and self.get_device_name():
+	def run_batch_no_dataset_upload_benchmark_threaded(self):
+		# Run the benchmark in a separate thread to prevent UI freezing.
+		threading.Thread(target=self.run_batch_no_dataset_upload_benchmark, daemon=True).start()
+
+	def run_batch_no_dataset_upload_benchmark(self):
+		if self.get_file_type_input_spec() and self.get_model_id_path_3() and self.get_device_name_3():
 			try:
-				self.run_benchmark_button.configure(state="disabled", fg_color="dark grey")  # Disable button
-				if self.model_path_entry.get():
+				self.run_batch_no_dataset_upload_button.configure(state="disabled", fg_color="dark grey")  # Disable button
+				if self.model_path_entry_3.get():
 					# Upload Model
-					model_path = self.model_path_entry.get()
+					model_path = self.model_path_entry_3.get()
 					model = hub.upload_model(str(model_path))
 
 					# Model ID
 					model_id = model.model_id
 				else:
 					# Model ID
-					model_id = self.model_id_entry.get()
+					model_id = self.model_id_entry_3.get()
 					# Get Model
 					model = hub.get_model(model_id)
 				
@@ -554,11 +658,15 @@ class BenchmarkQAIHub():
 				model_library = model.model_type.name.lower()
 				
 				# Get Device Name
-				device_name = self.device_name_entry.get()
+				device_name = self.device_name_entry_3.get()
 				
 				# Set benchmark results directory
 				model_device = device_name.replace(" ", "").lower()
 				results_dir = f"{model_name}_{model_library}_{model_device}"
+
+				# Ensure folder exists
+				results_dir = pathlib.Path(results_dir)
+				results_dir.mkdir(parents=True, exist_ok=True)
 				
 				print(f"------------------------------------------------------")
 				print(f"| Model ID: {model_id}")
@@ -569,33 +677,72 @@ class BenchmarkQAIHub():
 				print(f"------------------------------------------------------")
 				
 				### Run inference on image datasets
-				# Dataset Paths
-				datasets_dir = self.datasets_dir_entry.get()
-				dataset_paths = [
-					f"{datasets_dir}/" + image_dataset 
-					for image_dataset in listdir(f"{datasets_dir}")
+				tflite_normal = [
+					'dv74k8ew2', 'dv910vo82', 'dq9krm657', 'd82ndxp57', 'dv9518om2',
+					'dd9ppq5n9', 'dz7z43qr9', 'd67jwmon2', 'd67oxpon7', 'dp7lgeow2',
+					'dk7gkz4o2', 'dv74k8qw2', 'dq9krmo57', 'dp70nz3l9', 'd82ndxo57',
+					'd09y13p39', 'dv95185m2', 'dd9ppqon9', 'dn7xzrx59', 'dj7d0em89',
+					'dz7z43vr9', 'dx9e8e0p9', 'd67jwm4n2', 'dw9v84vj7', 'd693mv6l7',
+					'dp7lge3w2', 'dk7gkzmo2', 'dz2r543o7', 'dr9wme332', 'dv74k83w2',
+					'dq9krm357', 'd678rge62', 'd09y13v39', 'dv95186m2', 'dr2qq53l2',
+					'dj7d0en89', 'dr2qq51o2', 'dn7xzrnv9', 'dz7z43869', 'dx9e8e149',
+					'dw9v84507', 'd67oxpmq7', 'd693mvwp7', 'dw264zde9', 'dk7gkzx02',
+					'dr9wmeyk2', 'dv910vwe2', 'd678rgpy2', 'd09y130m9', 'dd9ppqew9',
+					'dv74k8ew2', 'dv910vo82', 'dq9krm657', 'd82ndxp57', 'dv9518om2',
+					'dd9ppq5n9', 'dz7z43qr9', 'd67jwmon2', 'd67oxpon7', 'dp7lgeow2',
+					'dk7gkz4o2', 'dv74k8qw2', 'dq9krmo57', 'dp70nz3l9', 'd82ndxo57',
+					'd09y13p39', 'dv95185m2', 'dd9ppqon9', 'dn7xzrx59', 'dj7d0em89',
+					'dz7z43vr9', 'dx9e8e0p9', 'd67jwm4n2', 'dw9v84vj7', 'd693mv6l7',
+					'dp7lge3w2', 'dk7gkzmo2', 'dz2r543o7', 'dr9wme332', 'dv74k83w2',
+					'dq9krm357', 'd678rge62', 'd09y13v39', 'dv95186m2', 'dr2qq53l2',
+					'dj7d0en89', 'dr2qq51o2', 'dn7xzrnv9', 'dz7z43869', 'dx9e8e149',
+					'dw9v84507', 'd67oxpmq7', 'd693mvwp7', 'dw264zde9', 'dk7gkzx02',
+					'dr9wmeyk2', 'dv910vwe2', 'd678rgpy2', 'd09y130m9', 'dd9ppqew9'
 				]
-				dataset_paths.sort(key=extract_number)
+				tflite_normal = tflite_normal[::-1]
+
+				tflite_quantized = []
+				onnx_normal = []
+				onnx_quantized = []
+
+				file_type = self.optionmenu.get()
+				input_spec = self.optionmenu_2.get()
+
+				if file_type == "tflite" and input_spec == "normal":
+					dataset_ids = tflite_normal
+				elif file_type == "tflite" and input_spec == "quantized":
+					dataset_ids = tflite_quantized
+				elif file_type == "onnx" and input_spec == "normal":
+					dataset_ids = onnx_normal
+				elif file_type == "onnx" and input_spec == "quantized":
+					dataset_ids = onnx_quantized
 
 				# Split into two lists with alternating elements
-				list1 = dataset_paths[::2]  # odd
-				list2 = dataset_paths[1::2]  # even
+				list1 = dataset_ids[::2]  # odd
+				list2 = dataset_ids[1::2]  # even
 
 				thread1 = threading.Thread(
-					target=inference_dataset,
+					target=inference_datasets_using_id,
 					args=(list1, model_id, device_name, model_name, results_dir)
 				)
 
 				thread2 = threading.Thread(
-					target=inference_dataset,
+					target=inference_datasets_using_id,
 					args=(list2, model_id, device_name, model_name, results_dir)
 				)
 
+				thread3 = threading.Thread(
+    				target=self.update_progressbar,
+    				args=(self.progressbar_3, self.progressbar_label_3, results_dir)
+				)
+	
 				thread1.start()
 				thread2.start()
+				thread3.start()
 
 				thread1.join()
 				thread2.join()
+				thread3.join()
 
 				### Process results from inference
 				result_paths = [f"./{results_dir}/" + result for result in listdir(f"./{results_dir}")]
@@ -614,8 +761,31 @@ class BenchmarkQAIHub():
 			except Exception as e:
 				messagebox.showerror(title="❌ Error!", message=f"An error occurred: {e}")
 			finally:
-				self.run_benchmark_button.configure(state="normal", fg_color=self.button_color)  # Re-enable button
+				self.run_batch_no_dataset_upload_button.configure(state="normal", fg_color=self.button_color)  # Re-enable button
 		else:
 			print("😱 This should never happen. 😱")
+
+	def get_file_type_input_spec(self):
+		file_type = self.optionmenu.get()
+		input_spec = self.optionmenu_2.get()
+		if not file_type or not input_spec:
+			messagebox.showerror(title="❌ Error!", message="No file type or input spec given.")
+			return False
+		return True
+
+	def get_model_id_path_3(self):
+		model_id = self.model_id_entry_3.get()
+		model_path = self.model_path_entry_3.get()
+		if not model_id and not model_path:
+			messagebox.showerror(title="❌ Error!", message="No model file path or model id given.")
+			return False
+		return True
+	
+	def get_device_name_3(self):
+		device_name = self.device_name_entry_3.get()
+		if not device_name:
+			messagebox.showerror(title="❌ Error!", message="No device name given.")
+			return False
+		return True
 
 BenchmarkQAIHub()
