@@ -109,8 +109,19 @@ def inference_dataset(dataset_paths, model_id, device_name, model_name, results_
 		inference_job.download_output_data(download_path)
 
 def inference_datasets_using_id(datasets, model_id, device_name, model_name, results_dir):
-	for idx, dataset in enumerate(datasets):
-		dataset =  hub.get_dataset(dataset)
+	for dataset in datasets:
+		dataset = hub.get_dataset(dataset)
+
+		# Grab the dataset id
+		match = re.search(r'_(\d+)\.h5', dataset.name)
+		if not match:
+			print("❌ Dataset naming incorrect!")
+			print(f"❌ Got: {dataset}")
+			print("❌ Expected: some/path/dataset_'DATASET_ID'.h5")
+			print("❌ Expected: some/path/dataset_quantized_'DATASET_ID'.h5")
+			exit()
+		dataset_id = int(match.group(1))
+
 		# Submit inference job
 		print(f"😩 Inference: {dataset.name} 😩")
 		inference_job = hub.submit_inference_job(
@@ -127,7 +138,7 @@ def inference_datasets_using_id(datasets, model_id, device_name, model_name, res
 		results_dir.mkdir(parents=True, exist_ok=True)
 
 		# Download inference results dataset to specific folder
-		download_path = f"./{results_dir}/{model_name}_{idx + 1}"
+		download_path = f"./{results_dir}/{model_name}_{dataset_id}"
 		inference_job.download_output_data(download_path)
 
 
