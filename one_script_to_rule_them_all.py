@@ -70,6 +70,7 @@ def construct_datasets(image_paths, datasets_dir, dataset_num, input_spec, file_
 # Upload datasets and get back list of dataset ids
 def upload_datasets(dataset_paths):
 	for dataset in dataset_paths:
+		print(dataset)
 		hub.upload_dataset(dataset)
 
 	dataset_ids = hub.get_datasets(limit = 50)
@@ -275,12 +276,13 @@ def extract_number(filename):
 	return float('inf')  # Default if no number found
 
 # Dataset Paths
-# datasets_dir = "datasets_tflite"
-# dataset_paths = [
-# 	f"{datasets_dir}/" + image_dataset 
-# 	for image_dataset in listdir(f"{datasets_dir}")
-# ]
-# dataset_paths.sort(key=extract_number)
+datasets_dir = "datasets_onnx"
+dataset_paths = [
+	f"{datasets_dir}/" + image_dataset 
+	for image_dataset in listdir(f"{datasets_dir}")
+]
+dataset_paths.sort(key=extract_number)
 
-# dataset_ids = upload_datasets(dataset_paths)
-# print(dataset_ids)
+dataset_ids = upload_datasets(dataset_paths)
+
+print([dataset.dataset_id for dataset in dataset_ids])
