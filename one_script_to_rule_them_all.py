@@ -69,11 +69,13 @@ def construct_datasets(image_paths, datasets_dir, dataset_num, input_spec, file_
 
 # Upload datasets and get back list of dataset ids
 def upload_datasets(dataset_paths):
-	for dataset in dataset_paths:
-		print(dataset)
-		hub.upload_dataset(dataset)
+	dataset_ids = []
 
-	dataset_ids = hub.get_datasets(limit = 50)
+	for dataset in dataset_paths:
+		print(f"Getting ID for: {dataset}")
+		dataset = hub.upload_dataset(dataset)
+		dataset_ids.append(dataset.dataset_id)
+
 	return dataset_ids
 
 # Run inference on  QAI Hub and download
@@ -253,4 +255,15 @@ def extract_number(filename):
 
 # dataset_ids = upload_datasets(dataset_paths)
 
-# print([dataset.dataset_id for dataset in dataset_ids])
+# # print(dataset_ids)
+# results_dir = "squeezenet1_1_quantized_onnx_samsunggalaxys22(family)"
+# ### Process results from inference
+# result_paths = [f"./{results_dir}/" + result for result in listdir(f"./{results_dir}")]
+# result_paths.sort(key=extract_number)
+# process_results(result_paths, "./class_index.json", "./synset.json")
+
+# ### Calculate accuracy based on processed results
+# results_json = "results.json"
+# ground_truth_json = "ground_truth.json"
+
+# calculate_accuracy(results_json, ground_truth_json, "Samsung Galaxy S22 (Family)", "squeezenet1_1_quantized", "onnx")
