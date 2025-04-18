@@ -55,7 +55,7 @@ onnx_quantized = [
 def add_sharing(dataset_ids):
 	for dataset_id in dataset_ids:
 		dataset = hub.get_dataset(dataset_id)
-		dataset.modify_sharing(["andre150@csusm.edu", "keoph002@csusm.edu", "janov005@csusm.edu"],[])
+		dataset.modify_sharing(["andre150@csusm.edu", "keoph002@csusm.edu", "justinasjano@gmail.com"],[])
 		print(f"Shared '{dataset.name}' with: {dataset.get_sharing()}")
 
 print("----------------------------- tflite_normal -----------------------------")
