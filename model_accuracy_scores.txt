@@ -86,30 +86,26 @@
 
 # TFLITE
 (77.08, 93.32, 'Samsung Galaxy S22 (Family)', 'wideresnet50_quantized', 'tflite')
+(77.11, 93.33, 'Samsung Galaxy S22 (Family)', 'wideresnet50', 'tflite')
+(79.92, 94.78, 'Samsung Galaxy S22 (Family)', 'vit', 'tflite')
 (79.17, 94.49, 'Samsung Galaxy S22 (Family)', 'swin_tiny', 'tflite')
 (81.94, 95.87, 'Samsung Galaxy S22 (Family)', 'swin_small', 'tflite')
-(77.11, 93.33, 'Samsung Galaxy S22 (Family)', 'wideresnet50', 'tflite')
 (81.89, 95.98, 'Samsung Galaxy S22 (Family)', 'swin_base', 'tflite')
-(79.92, 94.78, 'Samsung Galaxy S22 (Family)', 'vit', 'tflite')
 (54.62, 78.04, 'Samsung Galaxy S22 (Family)', 'squeezenet1_1_quantized', 'tflite')
-(55.82, 78.07, 'Samsung Galaxy S22 (Family)', 'shufflenet_v2_quantized', 'tflite')
-(79.8, 94.78, 'Samsung Galaxy S22 (Family)', 'resnext50_quantized', 'tflite')
 (54.83, 78.12, 'Samsung Galaxy S22 (Family)', 'squeezenet1_1', 'tflite')
+(55.82, 78.07, 'Samsung Galaxy S22 (Family)', 'shufflenet_v2_quantized', 'tflite')
 (56.21, 78.49, 'Samsung Galaxy S22 (Family)', 'shufflenet_v2', 'tflite')
+(79.8, 94.78, 'Samsung Galaxy S22 (Family)', 'resnext50_quantized', 'tflite')
 
 # ONNX
-(80.68, 95.39, 'Samsung Galaxy S22 (Family)', 'swin_tiny', 'onnx')
-(82.57, 96.21, 'Samsung Galaxy S22 (Family)', 'swin_small', 'onnx')
+(0.13, 0.92, 'Samsung Galaxy S22 (Family)', 'wideresnet50_quantized', 'onnx') # Tested 3 times.
 (77.11, 93.34, 'Samsung Galaxy S22 (Family)', 'wideresnet50', 'onnx')
 (79.91, 94.78, 'Samsung Galaxy S22 (Family)', 'vit', 'onnx')
+(80.68, 95.39, 'Samsung Galaxy S22 (Family)', 'swin_tiny', 'onnx')
+(82.57, 96.21, 'Samsung Galaxy S22 (Family)', 'swin_small', 'onnx')
 (83.06, 96.46, 'Samsung Galaxy S22 (Family)', 'swin_base', 'onnx')
 (54.58, 77.94, 'Samsung Galaxy S22 (Family)', 'squeezenet1_1_quantized', 'onnx')
 (54.83, 78.12, 'Samsung Galaxy S22 (Family)', 'squeezenet1_1', 'onnx')
 (55.91, 78.14, 'Samsung Galaxy S22 (Family)', 'shufflenet_v2_quantized', 'onnx')
 (56.22, 78.48, 'Samsung Galaxy S22 (Family)', 'shufflenet_v2', 'onnx')
-(0.17, 0.89, 'Samsung Galaxy S22 (Family)', 'resnext50_quantized', 'onnx') --- TEST THESE AGAIN
-(0.13, 0.92, 'Samsung Galaxy S22 (Family)', 'wideresnet50_quantized', 'onnx') --- TEST THESE AGAIN
-(0.13, 0.92, 'Samsung Galaxy S22 (Family)', 'wideresnet50_quantized', 'onnx')
-(0.16, 0.84, 'Samsung Galaxy S22 (Family)', 'resnext50_quantized', 'onnx')
-(0.17, 0.89, 'Samsung Galaxy S22 (Family)', 'resnext50_quantized', 'onnx')
-(0.17, 0.89, 'Samsung Galaxy S22 (Family)', 'resnext50_quantized', 'onnx')
+(0.17, 0.89, 'Samsung Galaxy S22 (Family)', 'resnext50_quantized', 'onnx') # Tested 3 times.
