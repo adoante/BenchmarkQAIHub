@@ -5,5 +5,3 @@
 __pycache__
 .vscode
 results.json
-
-share_dataset_ids.py
