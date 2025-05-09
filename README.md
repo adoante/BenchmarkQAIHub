@@ -1,3 +1,9 @@
+## Instructions below :)
+
+![image](https://github.com/adoante/BenchmarkQAIHub/blob/master/Screenshot%202025-05-09%20102427.png)
+
+![image](https://github.com/adoante/BenchmarkQAIHub/blob/master/Screenshot%202025-05-09%20101934.png)
+
 ## Create Conda environment first
 
 ```bash
